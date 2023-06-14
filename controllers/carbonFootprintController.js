@@ -6,19 +6,19 @@ exports.getAllCarbonFootprints = (req, res, next) => {
       res.status(200).json(carbonFootprints);
     })
     .catch(error => {
-      res.status(500).json({ error: 'Error al obtener las huellas de carbono' });
+      res.status(500).json({ error: 'Error when obtaining carbon footprints' });
     });
 };
 
 exports.createCarbonFootprint = (req, res, next) => {
-  const { carbonValue, userId } = req.body;
+  const { footprint_value, userId } = req.body;
 
-  CarbonFootprint.create({ carbonValue, userId })
+  CarbonFootprint.create({ footprint_value, userId })
     .then(carbonFootprint => {
       res.status(201).json(carbonFootprint);
     })
     .catch(error => {
-      res.status(500).json({ error: 'Error al crear la huella de carbono' });
+      res.status(500).json({ error: 'Error when creating the carbon footprint' });
     });
 };
 
@@ -31,14 +31,14 @@ exports.updateCarbonFootprint = (req, res, next) => {
       if (carbonFootprint) {
         return carbonFootprint.update(updatedData);
       } else {
-        throw new Error('Huella de carbono no encontrada');
+        res.status(404).json({ error: 'Carbon footprint Not found' });
       }
     })
     .then(updatedCarbonFootprint => {
       res.status(200).json(updatedCarbonFootprint);
     })
     .catch(error => {
-      res.status(500).json({ error: 'Error al actualizar la huella de carbono' });
+      res.status(500).json({ error: 'Error updating carbon footprint' });
     });
 };
 
@@ -48,15 +48,16 @@ exports.deleteCarbonFootprint = (req, res, next) => {
   CarbonFootprint.findByPk(carbonFootprintId)
     .then(carbonFootprint => {
       if (carbonFootprint) {
-        return carbonFootprint.destroy();
+        carbonFootprint.destroy();
+        res.send("CarbonFootprint by id: "+carbonFootprintId+" deleted")
       } else {
-        throw new Error('Huella de carbono no encontrada');
+        res.status(404).json({ error: 'Carbon footprint Not found' });
       }
     })
     .then(() => {
       res.status(204).end();
     })
     .catch(error => {
-      res.status(500).json({ error: 'Error al eliminar la huella de carbono' });
+      res.status(500).json({ error: 'Error when removing the carbon footprint' });
     });
 };

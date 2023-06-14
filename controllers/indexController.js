@@ -1,4 +1,5 @@
 const User = require('../sequelize.js').User;
+const session = require('express-session');
 var jwt = require('jsonwebtoken');
 
 function generateAccessToken(email,password){
@@ -17,6 +18,8 @@ exports.login = (req, res, next)=>{
     }).then((user)=>{
         if (user!=null){
             if (user.password == password){
+                const token = generateAccessToken(email, password);
+                req.session.token = token;
                 req.session.user= user;
                 res.redirect('/profile');
             }else{
@@ -41,9 +44,12 @@ exports.signup = (req, res, next)=>{
         }
     }).then((user)=>{
         if (user==null){
-            User.create({email:email,password:password}).then((results)=>{
-                    console.log(results);
-                    req.session.user= results;
+            User.create({email:email,password:password}).then((user)=>{
+                    var token = generateAccessToken(email,password);
+                    console.log(user);
+                    req.session.user= user;
+                    req.session.token= token;
+                    console.log(req.session.token)
                     res.redirect('/profile');
                 });
                 

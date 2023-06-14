@@ -6,7 +6,7 @@ const UserDataModel = require('./models/Users')
 const TipDataModel = require('./models/Tips')
 const RecyclingDataModel = require('./models/Recycling')
 const HabitDataModel = require('./models/Habits')
-const HabitEquipmentDataModel = require('./models/HabitEquipments')
+
 const EquipmentDataModel = require('./models/Equipments')
 const CarbonFootprintDataModel = require('./models/CarbonFootprints')
 const TransportDataModel = require('./models/Transports')
@@ -23,7 +23,7 @@ const User = UserDataModel(sequelize,DataTypes);
 const Tip = TipDataModel(sequelize,DataTypes);
 const Recycling = RecyclingDataModel(sequelize,DataTypes);
 const Habit = HabitDataModel(sequelize,DataTypes);
-const HabitEquipment = HabitEquipmentDataModel(sequelize,DataTypes);
+
 const Equipment = EquipmentDataModel(sequelize,DataTypes);
 const CarbonFootprint = CarbonFootprintDataModel(sequelize,DataTypes);
 const Transport = TransportDataModel(sequelize,DataTypes);
@@ -41,23 +41,23 @@ User.create({firstName:"Roberto",email:"roberto@gmail.com",password:"123456"}).t
 });
 
 
-User.hasOne(Tip, { foreignKey: 'id' });
-Tip.belongsTo(User, { foreignKey: 'id' });
+User.hasOne(Tip );
+Tip.belongsTo(User);
 
-User.hasMany(Transport, { foreignKey: 'id' });
-Transport.belongsTo(User, { foreignKey: 'id' });
+User.hasMany(Transport );
+Transport.belongsTo(User);
 
-User.hasMany(Recycling, { foreignKey: 'id' });
-Recycling.belongsTo(User, { foreignKey: 'id' });
+User.hasMany(Recycling);
+Recycling.belongsTo(User);
 
-User.hasMany(Habit, { foreignKey: 'id' });
-Habit.belongsTo(User, { foreignKey: 'id' });
+User.hasMany(Habit);
+Habit.belongsTo(User);
 
-Habit.belongsToMany(Equipment, { through: 'habit_equipment', foreignKey: 'id' });
-Equipment.belongsToMany(Habit, { through: 'habit_equipment', foreignKey: 'id' });
+Habit.belongsToMany(Equipment, { through: 'habit_equipment' });
+Equipment.belongsToMany(Habit, { through: 'habit_equipment' });
 
-User.hasOne(CarbonFootprint, { foreignKey: 'id' });
-CarbonFootprint.belongsTo(User, { foreignKey: 'id' });
+User.hasOne(CarbonFootprint);
+CarbonFootprint.belongsTo(User);
 
 sequelize.sync({ force: true })
 .then(() => {
@@ -69,5 +69,5 @@ sequelize.sync({ force: true })
 });
 
 module.exports={
-    User,Tip,Recycling,Habit,HabitEquipment,Equipment,CarbonFootprint,Transport
+    User,Tip,Recycling,Habit,Equipment,CarbonFootprint,Transport
 }

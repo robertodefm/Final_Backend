@@ -36,7 +36,7 @@ exports.createUser = (req, res, next) => {
       res.status(201).json(user);
     })
     .catch(error => {
-      res.status(500).json({ error: 'Error al crear el usuario' });
+      res.status(500).json({ error: 'Error creating user' });
     });
 };
 
@@ -51,14 +51,14 @@ exports.updateUser = (req, res, next) => {
       if (user) {
         return user.update(updatedData);
       } else {
-        throw new Error('Usuario no encontrado');
+        res.status(404).json({ error: 'User Not found' });
       }
     })
     .then(updatedUser => {
       res.status(200).json(updatedUser);
     })
     .catch(error => {
-      res.status(500).json({ error: 'Error al actualizar el usuario' });
+      res.status(500).json({ error: 'Failed to update user' });
     });
 };
 
@@ -69,15 +69,16 @@ exports.deleteUser = (req, res, next) => {
   User.findByPk(userId)
     .then(user => {
       if (user) {
-        return user.destroy();
+        user.destroy();
+        res.send("User by id: "+userId+" deleted")
       } else {
-        throw new Error('Usuario no encontrado');
+        res.status(404).json({ error: 'User Not found' });
       }
     })
     .then(() => {
       res.status(204).end();
     })
     .catch(error => {
-      res.status(500).json({ error: 'Error al eliminar el usuario' });
+      res.status(500).json({ error: 'Failed to delete user' });
     });
 };

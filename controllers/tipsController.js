@@ -6,7 +6,7 @@ exports.getAllTips = (req, res, next) => {
       res.status(200).json(tips);
     })
     .catch(error => {
-      res.status(500).json({ error: 'Error al obtener los consejos' });
+      res.status(500).json({ error: 'Error getting tips' });
     });
 };
 
@@ -18,7 +18,7 @@ exports.createTip = (req, res, next) => {
       res.status(201).json(tip);
     })
     .catch(error => {
-      res.status(500).json({ error: 'Error al crear el consejo' });
+      res.status(500).json({ error: 'Error creating tip' });
     });
 };
 
@@ -31,14 +31,14 @@ exports.updateTip = (req, res, next) => {
       if (tip) {
         return tip.update(updatedData);
       } else {
-        throw new Error('Consejo no encontrado');
+        res.status(404).json({ error: 'Tip Not found' });
       }
     })
     .then(updatedTip => {
       res.status(200).json(updatedTip);
     })
     .catch(error => {
-      res.status(500).json({ error: 'Error al actualizar el consejo' });
+      res.status(500).json({ error: 'Failed to update tip' });
     });
 };
 
@@ -48,15 +48,16 @@ exports.deleteTip = (req, res, next) => {
   Tip.findByPk(tipId)
     .then(tip => {
       if (tip) {
-        return tip.destroy();
+        tip.destroy();
+        res.send("Tip by id: "+tipId+" deleted")
       } else {
-        throw new Error('Consejo no encontrado');
+        res.status(404).json({ error: 'Tip Not found' });
       }
     })
     .then(() => {
       res.status(204).end();
     })
     .catch(error => {
-      res.status(500).json({ error: 'Error al eliminar el consejo' });
+      res.status(500).json({ error: 'Error deleting tip' });
     });
 };

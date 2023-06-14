@@ -18,7 +18,7 @@ exports.createEquipment = (req, res, next) => {
       res.status(201).json(equipment);
     })
     .catch(error => {
-      res.status(500).json({ error: 'Error al crear el equipo' });
+      res.status(500).json({ error: 'Error creating equipment' });
     });
 };
 
@@ -31,14 +31,14 @@ exports.updateEquipment = (req, res, next) => {
       if (equipment) {
         return equipment.update(updatedData);
       } else {
-        throw new Error('Equipo no encontrado');
+        res.status(404).json({ error: 'Equipment Not found' });
       }
     })
     .then(updatedEquipment => {
       res.status(200).json(updatedEquipment);
     })
     .catch(error => {
-      res.status(500).json({ error: 'Error al actualizar el equipo' });
+      res.status(500).json({ error: 'Error updating the equipment' });
     });
 };
 
@@ -48,15 +48,16 @@ exports.deleteEquipment = (req, res, next) => {
   Equipment.findByPk(equipmentId)
     .then(equipment => {
       if (equipment) {
-        return equipment.destroy();
+        equipment.destroy();
+        res.send("Equipment by id: "+equipmentId+" deleted")
       } else {
-        throw new Error('Equipo no encontrado');
+        res.status(404).json({ error: 'Equipment Not found' });
       }
     })
     .then(() => {
       res.status(204).end();
     })
     .catch(error => {
-      res.status(500).json({ error: 'Error al eliminar el equipo' });
+      res.status(500).json({ error: 'Failed to delete equipment' });
     });
 };

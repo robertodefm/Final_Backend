@@ -6,19 +6,19 @@ exports.getAllTransports = (req, res, next) => {
       res.status(200).json(transports);
     })
     .catch(error => {
-      res.status(500).json({ error: 'Error al obtener los transportes' });
+      res.status(500).json({ error: 'Error getting transports' });
     });
 };
 
 exports.createTransport = (req, res, next) => {
-  const { tipo_transporte, distancia_percorrida, combustivel_utilizado, cantidade_combustivel, energia_utilizada } = req.body;
+  const { type,  distance, fuel, quantity_fuel, energy } = req.body;
 
-  Transport.create({ tipo_transporte, distancia_percorrida, combustivel_utilizado, cantidade_combustivel, energia_utilizada })
+  Transport.create({ type,  distance, fuel, quantity_fuel, energy })
     .then(transport => {
       res.status(201).json(transport);
     })
     .catch(error => {
-      res.status(500).json({ error: 'Error al crear el transporte' });
+      res.status(500).json({ error: 'Error creating transport' });
     });
 };
 
@@ -31,14 +31,14 @@ exports.updateTransport = (req, res, next) => {
       if (transport) {
         return transport.update(updatedData);
       } else {
-        throw new Error('Transporte no encontrado');
+        res.status(404).json({ error: 'Transport Not found' });
       }
     })
     .then(updatedTransport => {
       res.status(200).json(updatedTransport);
     })
     .catch(error => {
-      res.status(500).json({ error: 'Error al actualizar el transporte' });
+      res.status(500).json({ error: 'Failed to update transport' });
     });
 };
 
@@ -48,15 +48,16 @@ exports.deleteTransport = (req, res, next) => {
   Transport.findByPk(transportId)
     .then(transport => {
       if (transport) {
-        return transport.destroy();
+        transport.destroy();
+        res.send("Transport by id: "+transportId+" deleted")
       } else {
-        throw new Error('Transporte no encontrado');
+        res.status(404).json({ error: 'Transport Not found' });
       }
     })
     .then(() => {
       res.status(204).end();
     })
     .catch(error => {
-      res.status(500).json({ error: 'Error al eliminar el transporte' });
+      res.status(500).json({ error: 'Error deleting transport' });
     });
 };

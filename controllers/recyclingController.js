@@ -6,7 +6,7 @@ exports.getAllRecyclings = (req, res, next) => {
       res.status(200).json(recyclings);
     })
     .catch(error => {
-      res.status(500).json({ error: 'Error al obtener los materiales reciclados' });
+      res.status(500).json({ error: 'Error getting recycling' });
     });
 };
 
@@ -18,7 +18,7 @@ exports.createRecycling = (req, res, next) => {
       res.status(201).json(recycling);
     })
     .catch(error => {
-      res.status(500).json({ error: 'Error al crear el material reciclado' });
+      res.status(500).json({ error: 'Error creating recycling' });
     });
 };
 
@@ -31,14 +31,14 @@ exports.updateRecycling = (req, res, next) => {
       if (recycling) {
         return recycling.update(updatedData);
       } else {
-        throw new Error('Material reciclado no encontrado');
+        res.status(404).json({ error: 'Recycling Not found' });
       }
     })
     .then(updatedRecycling => {
       res.status(200).json(updatedRecycling);
     })
     .catch(error => {
-      res.status(500).json({ error: 'Error al actualizar el material reciclado' });
+      res.status(500).json({ error: 'Error updating recycling' });
     });
 };
 
@@ -48,15 +48,16 @@ exports.deleteRecycling = (req, res, next) => {
   Recycling.findByPk(recyclingId)
     .then(recycling => {
       if (recycling) {
-        return recycling.destroy();
+        recycling.destroy();
+        res.send("Recycling by id: "+recyclingId+" deleted")
       } else {
-        throw new Error('Material reciclado no encontrado');
+        res.status(404).json({ error: 'Recycling Not found' });
       }
     })
     .then(() => {
       res.status(204).end();
     })
     .catch(error => {
-      res.status(500).json({ error: 'Error al eliminar el material reciclado' });
+      res.status(500).json({ error: 'Error deleting recycling' });
     });
 };

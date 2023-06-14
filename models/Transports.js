@@ -1,21 +1,22 @@
 module.exports = (sequelize, DataTypes) => {
     return sequelize.define('transport', {
-        tipo_transporte: {
+        type: {
             type: DataTypes.STRING(255),
             allowNull: false
           },
-          distancia_percorrida: {
+          distance: {
             type: DataTypes.FLOAT,
             allowNull: false
           },
-          combustivel_utilizado: {
+          fuel: {
             type: DataTypes.STRING(255)
           },
-          cantidade_combustivel: {
+          quantity_fuel: {
             type: DataTypes.FLOAT
           },
-          energia_utilizada: {
+          energy: {
             type: DataTypes.FLOAT
           }
+          
     });
 }
