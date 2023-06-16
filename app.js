@@ -1,8 +1,7 @@
 var dotenv = require('dotenv');
 dotenv.config();
 var seq = require('./sequelize');
-const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./swagger-output.json');
+const cors = require('cors');
 
 
 
@@ -13,12 +12,12 @@ var path = require('path');
 var flash = require('connect-flash');
 
 var usersRouter = require('./routes/users');
-var transportsRouter = require('./routes/transports');
+
 var tipsRouter = require('./routes/tips');
-var recyclingRouter = require('./routes/recycling');
+
 var indexRouter = require('./routes/index');
-var habitsRouter = require('./routes/habits');
-var equipmentsRouter = require('./routes/equipments');
+
+
 var carbonFootprintsRouter = require('./routes/carbonFootprints');
 
 var app = express();
@@ -34,21 +33,28 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Use the session middleware
 app.use(session({
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: true   
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true   
 }));
 
-app.use('/api-docs',swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use(cors());
+
 app.use(flash()); // use connect-flash for flash messages stored in session
 app.use('/user', usersRouter);
-app.use('/transport', transportsRouter);
+
 app.use('/tip', tipsRouter);
-app.use('/recycling', recyclingRouter);
+
 app.use('/', indexRouter);
-app.use('/habit', habitsRouter);
-app.use('/equipment', equipmentsRouter);
+
+
 app.use('/carbonfootprint', carbonFootprintsRouter);
 
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+  });
 
 module.exports = app;

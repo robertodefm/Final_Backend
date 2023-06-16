@@ -11,9 +11,9 @@ exports.getAllCarbonFootprints = (req, res, next) => {
 };
 
 exports.createCarbonFootprint = (req, res, next) => {
-  const { footprint_value, userId } = req.body;
+  const { footprint_value, email_user,message } = req.body;
 
-  CarbonFootprint.create({ footprint_value, userId })
+  CarbonFootprint.create({ footprint_value, email_user,message })
     .then(carbonFootprint => {
       res.status(201).json(carbonFootprint);
     })
